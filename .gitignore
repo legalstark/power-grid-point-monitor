@@ -1,0 +1,23 @@
+# Python 缓存与测试运行数据
+__pycache__/
+*.py[cod]
+.runtime/
+**/runtime/*
+!**/runtime/.gitkeep
+
+# 本地数据库及临时日志
+*.db
+*.db-shm
+*.db-wal
+*.log
+
+# 浏览器取证的中间帧与运行目录
+佐证材料/gif-frames/
+佐证材料/运行数据/
+佐证材料/EXE运行数据/
+可执行程序/data/
+
+# 打包缓存
+build/
+dist/
+*.spec

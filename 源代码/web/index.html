@@ -1,0 +1,112 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>A1 厂站 · 测点实时监控</title>
+  <link rel="stylesheet" href="/static/styles.css">
+</head>
+<body>
+  <div class="app-shell">
+    <aside class="sidebar">
+      <div class="brand">
+        <div class="brand-mark" aria-hidden="true">
+          <svg viewBox="0 0 48 48"><path d="M27 3 10 27h12l-2 18 18-27H26z"/></svg>
+        </div>
+        <div><strong>GridScope</strong><span>电力监控平台</span></div>
+      </div>
+      <nav aria-label="主导航">
+        <a class="nav-item active" href="#monitor"><span>▦</span>实时监视</a>
+        <a class="nav-item" href="#history" id="historyNav"><span>⌁</span>历史趋势</a>
+        <a class="nav-item" href="#quality"><span>◇</span>质量状态</a>
+      </nav>
+      <div class="sidebar-spacer"></div>
+      <section class="station-card">
+        <div class="station-icon">A1</div>
+        <div><span>当前厂站</span><strong>A1 厂站设备</strong></div>
+      </section>
+      <div class="sidebar-meta">本地安全模式 · v1.0.0</div>
+    </aside>
+
+    <main class="main-content" id="monitor">
+      <header class="topbar">
+        <div>
+          <p class="eyebrow">运行态势 / A1 厂站</p>
+          <h1>测点实时监控</h1>
+          <p class="subtitle">120 个遥信与遥测点的实时数据、质量状态及历史趋势</p>
+        </div>
+        <div class="topbar-actions">
+          <div class="connection-pill" id="connectionPill"><i></i><span>正在连接</span></div>
+          <button class="icon-button" id="manualRefresh" title="立即刷新" aria-label="立即刷新">↻</button>
+        </div>
+      </header>
+
+      <section class="metric-grid" aria-label="运行指标">
+        <article class="metric-card primary">
+          <div class="metric-icon">∑</div><div><span>测点总数</span><strong id="totalMetric">--</strong><small>YX 100 · YC 20</small></div>
+        </article>
+        <article class="metric-card">
+          <div class="metric-icon green">✓</div><div><span>正常质量</span><strong id="goodMetric">--</strong><small id="qualityHint">等待首轮采集</small></div>
+        </article>
+        <article class="metric-card">
+          <div class="metric-icon amber">M</div><div><span>人工置数</span><strong id="manualMetric">--</strong><small>IEC 104 · SB 标志</small></div>
+        </article>
+        <article class="metric-card">
+          <div class="metric-icon blue">⟳</div><div><span>自动刷新</span><strong id="refreshMetric">1 秒</strong><small id="lastUpdated">尚未刷新</small></div>
+        </article>
+      </section>
+
+      <section class="panel data-panel">
+        <div class="panel-heading">
+          <div><h2>实时数据列表</h2><p>每页20条 · 选择一行查看历史曲线或执行人工置数</p></div>
+          <label class="switch"><input id="autoRefresh" type="checkbox" checked><span></span><em>自动刷新</em></label>
+        </div>
+        <div class="toolbar">
+          <div class="segmented" role="group" aria-label="测点类型">
+            <button class="active" data-type="">全部</button>
+            <button data-type="YX">遥信 YX</button>
+            <button data-type="YC">遥测 YC</button>
+          </div>
+          <label class="search-box"><span>⌕</span><input id="searchInput" placeholder="搜索点号或名称" autocomplete="off"></label>
+        </div>
+
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>唯一标识</th><th>测点名称</th><th>类型</th><th>实时值</th><th>质量码</th><th>刷新时间</th><th></th></tr></thead>
+            <tbody id="pointRows"><tr><td colspan="7" class="loading-cell"><span class="spinner"></span> 正在加载测点数据…</td></tr></tbody>
+          </table>
+        </div>
+        <footer class="table-footer">
+          <span id="pageSummary">等待数据</span>
+          <div class="pagination" id="pagination"></div>
+        </footer>
+      </section>
+    </main>
+  </div>
+
+  <aside class="drawer" id="historyDrawer" aria-hidden="true">
+    <div class="drawer-head">
+      <div><p class="eyebrow">历史变化</p><h2 id="drawerTitle">选择测点</h2><span id="drawerMeta"></span></div>
+      <button class="icon-button" id="closeDrawer" aria-label="关闭">×</button>
+    </div>
+    <div class="drawer-value"><span>当前值</span><strong id="drawerValue">--</strong><em id="drawerQuality">--</em></div>
+    <div class="history-tabs"><button data-minutes="1" class="active">近1分钟</button><button data-minutes="5">近5分钟</button><button data-minutes="10">近10分钟</button></div>
+    <div class="chart-card"><canvas id="historyChart" width="720" height="320"></canvas><div id="chartEmpty">积累历史数据中…</div></div>
+    <div class="drawer-actions"><button class="secondary" id="clearManual">解除置数</button><button class="primary-button" id="openManual">人工置数</button></div>
+  </aside>
+  <div class="drawer-overlay" id="drawerOverlay"></div>
+
+  <dialog id="manualDialog">
+    <form method="dialog" id="manualForm">
+      <button class="dialog-close" value="cancel" aria-label="关闭">×</button>
+      <p class="eyebrow">人工置数</p><h2 id="manualTitle">设置实时值</h2>
+      <p class="dialog-help" id="manualHelp">置数后质量码将自动标记为 SB（人工替代）。</p>
+      <label>设定值<input id="manualValue" required inputmode="decimal"></label>
+      <div class="range-hint" id="rangeHint"></div>
+      <div class="dialog-actions"><button value="cancel" class="secondary">取消</button><button id="submitManual" value="default" class="primary-button">确认置数</button></div>
+    </form>
+  </dialog>
+  <div class="toast" id="toast" role="status"></div>
+  <script src="/static/app.js"></script>
+</body>
+</html>

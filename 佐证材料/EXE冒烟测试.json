@@ -1,0 +1,10 @@
+{
+  "checks": {
+    "standaloneExecutables": true,
+    "embeddedWebInterface": true,
+    "pagination": true,
+    "manualQuality": true,
+    "manualRelease": true
+  },
+  "passed": true
+}

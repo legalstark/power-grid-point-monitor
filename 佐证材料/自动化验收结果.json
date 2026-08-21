@@ -1,0 +1,33 @@
+{
+  "startedAt": "2026-08-21 10:17:24",
+  "checks": {
+    "scope": {
+      "passed": true,
+      "count": 120
+    },
+    "telemetryCycle": {
+      "passed": true,
+      "changed": 20
+    },
+    "signalCycle": {
+      "passed": true,
+      "changed": 1
+    },
+    "pagination": {
+      "passed": true,
+      "pageSize": 20,
+      "totalPages": 6
+    },
+    "performance": {
+      "passed": true,
+      "requests": 80,
+      "p95Ms": 103.71,
+      "averageMs": 65.0
+    },
+    "history": {
+      "passed": true,
+      "rows": 1560
+    }
+  },
+  "passed": true
+}

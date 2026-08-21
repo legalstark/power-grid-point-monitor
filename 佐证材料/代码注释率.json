@@ -1,0 +1,8 @@
+{
+  "scope": "production-runtime",
+  "files": 7,
+  "nonEmptyLines": 1411,
+  "commentLines": 260,
+  "commentRatio": 0.1843,
+  "passed": true
+}
